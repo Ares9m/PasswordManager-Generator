@@ -35,7 +35,7 @@ class MainWindow:
         self.loadPasswords()
         # secret key imput btn connect
         self.ui.imputDecryptionKeyButton.clicked.connect(self.lunchImputDecryptionKeyDialog)
-        secretkey = ''
+        secretkey1 = ''
         
 
 
@@ -140,14 +140,15 @@ class MainWindow:
 
     def lunchImputDecryptionKeyDialog(self):
         impDecKeyDialog = QDialog()
-        uik = Ui_impDecKeyDialog()
-        uik.setupUi(impDecKeyDialog)
+        ui = Ui_impDecKeyDialog()
+        ui.setupUi(impDecKeyDialog)
         impDecKeyDialog.show()
         # impDecKeyDialog.exec_() #without exec_() the dialog will clsoe immediately
         rsp = impDecKeyDialog.exec_()
         if rsp == QDialog.Accepted: #if user clicks ok. USE: Accepted() not accepted()!
             # secretkey = self.ui.imputDecryptionkeyLineEdit.text()
-            self.ui.GeneratedPasswordEdit.setText(self.uik.imputDecryptionkeyLineEdit.text())
+            secretkey1 = str(ui.imputDecryptionkeyLineEdit.text()) #This works () needed after .text() to work
+
 
         
 
