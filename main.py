@@ -4,6 +4,7 @@ from passwordMenager import Ui_MainWindow
 from saveasDialog import Ui_saveDialog
 from imputDecKeyDialog import Ui_impDecKeyDialog
 import random
+# from cryptography import fernet
 
 class MainWindow:
     def __init__(self):
@@ -37,9 +38,6 @@ class MainWindow:
         self.ui.imputDecryptionKeyButton.clicked.connect(self.lunchImputDecryptionKeyDialog)
         secretkey1 = ''
         
-
-
-
     # page switch functions
     def togenerator(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_1)    
@@ -111,7 +109,7 @@ class MainWindow:
         cb.clear(mode=cb.Clipboard) #clears existing clipboard 
         cb.setText(letxt, mode=cb.Clipboard) #assigns textedit text to clipboard 
 
-    # save file dialog
+    # save file dialog, saving the password to .txt + encrypting it
     def lunchSaveDialog(self):
         cond = self.ui.GeneratedPasswordEdit.toPlainText()
         if cond != "":
@@ -127,21 +125,9 @@ class MainWindow:
                 decryptionkeyt = str(ui.decryptionkeyLineEdit.text())
                 passwd = self.ui.GeneratedPasswordEdit.toPlainText()
                 with open("passwords.txt", "a") as f:     # might need to transform this section into a seprate fuction in the future
-                    f.write(sitet + "|" + usernamet +"|"+passwd+"|"+decryptionkeyt+ "\n")
+                    f.write(sitet+ "|" +usernamet+ "|" +passwd+"\n")
+                self.loadPasswords() #updates the table
 
-
-
-
-    # saving the password to txt
-    # Test function
-    def saveThePassword(self,site, user, key):
-        # with open("test.txt", "w") as f: #its better to use it like this because it will close the file if done like f = open("test.txt", "w") another function file.close() is needed after otherwise it will still be using it
-        #     # modes "r" = read the file "w" overwrite the file -> if already exists it will clear and save the contents then "a" append mode if there is no file it will create it like w but it will not clear the conttes just add new content at the end
-        #     mytext = self.ui.GeneratedPasswordEdit.toPlainText()
-        #     f.write(mytext)
-        with open("passwords.txt", "a"):
-            passwd = self.ui.GeneratedPasswordEdit.toPlainText()
-            f.write(site + "|" + user +"|"+passwd+"|"+key+ "\n")
 
     # v Menager section v
 
@@ -157,12 +143,9 @@ class MainWindow:
             secretkey1 = str(ui.imputDecryptionkeyLineEdit.text()) #This works "()"" is needed after .text() to work & do not use self.ui when calling Qdialog winodw ui elements
 
     def loadPasswords(self):
-        # data to put into the table
-        passwords = [
-            {"site": "facebook", "username": "ares", "password": "1234567890"},
-            {"site": "youtube", "username": "ares99m", "password": "1234567890bbb"},
-            {"site": "google", "username": "arekmucha99@gmail.com", "password": "1234567890asd"},
-        ]
+        # data to put into the table        
+        with open("passwords.txt", "r") as f:
+            passwords = f.readlines()
         # naming the headers and setting the columns
         self.ui.tableWidget.setRowCount(len(passwords))
         self.ui.tableWidget.setColumnCount(3)
@@ -175,9 +158,10 @@ class MainWindow:
         # inserting the data
         row_index = 0
         for passw in passwords:
-            self.ui.tableWidget.setItem(row_index, 0, QTableWidgetItem(str(passw["site"])))
-            self.ui.tableWidget.setItem(row_index, 1, QTableWidgetItem(str(passw["username"])))
-            self.ui.tableWidget.setItem(row_index, 2, QTableWidgetItem(str(passw["password"])))
+            as_list = passw.split("|")
+            self.ui.tableWidget.setItem(row_index, 0, QTableWidgetItem(str(as_list[0])))
+            self.ui.tableWidget.setItem(row_index, 1, QTableWidgetItem(str(as_list[1])))
+            self.ui.tableWidget.setItem(row_index, 2, QTableWidgetItem(str(as_list[2].strip()))) #strip gets rid of \n at the end
             row_index += 1
 
 
@@ -191,3 +175,15 @@ if __name__ == "__main__":
     main_win = MainWindow()
     main_win.show()
     sys.exit(app.exec_())
+
+
+    # Test functions section
+
+    # def saveThePassword(self,site, user, key):
+    #     # with open("test.txt", "w") as f: #its better to use it like this because it will close the file if done like f = open("test.txt", "w") another function file.close() is needed after otherwise it will still be using it
+    #     #     # modes "r" = read the file "w" overwrite the file -> if already exists it will clear and save the contents then "a" append mode if there is no file it will create it like w but it will not clear the conttes just add new content at the end
+    #     #     mytext = self.ui.GeneratedPasswordEdit.toPlainText()
+    #     #     f.write(mytext)
+    #     with open("passwords.txt", "a"):
+    #         passwd = self.ui.GeneratedPasswordEdit.toPlainText()
+    #         f.write(site + "|" + user +"|"+passwd+"|"+key+ "\n")
