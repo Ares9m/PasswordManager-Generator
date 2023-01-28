@@ -119,11 +119,13 @@ class MainWindow:
         saveDialog.show()
         # saveDialog.exec_()
         rsp = saveDialog.exec_()
-        if rsp == QDialog.Accepted: #if user clicks ok. USE: Accepted() not accepted()!
-            # sitetem = str(self.ui.SiteLineEdit.text())
-            # usernametem = str(self.ui.usernameLineEdit.text())
-            # decryptionkeytem = str(self.ui.decryptionkeyLineEdit.text())
-            self.ui.GeneratedPasswordEdit.setText("password saved!")
+        if rsp == QDialog.Accepted: #if user clicks ok. USE: "Accepted()" not "accepted()" capital A
+            sitet = str(ui.SiteLineEdit.text())
+            usernamet = str(ui.usernameLineEdit.text())
+            decryptionkeyt = str(ui.decryptionkeyLineEdit.text())
+            passwd = self.ui.GeneratedPasswordEdit.toPlainText()
+            with open("passwords.txt", "a") as f:     # might need to transform this section into a seprate fuction in the future!
+                f.write(sitet + "|" + usernamet +"|"+passwd+"|"+decryptionkeyt+ "\n")
         else:
             self.ui.GeneratedPasswordEdit.setText("password NOT saved!")
 
@@ -131,10 +133,14 @@ class MainWindow:
 
     # saving the password to txt
     # Test function
-    def saveThePassword(self):
-        with open("test.txt", "w") as f:
-            mytext = self.ui.GeneratedPasswordEdit.toPlainText()
-            f.write(mytext)
+    def saveThePassword(self,site, user, key):
+        # with open("test.txt", "w") as f: #its better to use it like this because it will close the file if done like f = open("test.txt", "w") another function file.close() is needed after otherwise it will still be using it
+        #     # modes "r" = read the file "w" overwrite the file -> if already exists it will clear and save the contents then "a" append mode if there is no file it will create it like w but it will not clear the conttes just add new content at the end
+        #     mytext = self.ui.GeneratedPasswordEdit.toPlainText()
+        #     f.write(mytext)
+        with open("passwords.txt", "a"):
+            passwd = self.ui.GeneratedPasswordEdit.toPlainText()
+            f.write(site + "|" + user +"|"+passwd+"|"+key+ "\n")
 
     # v Menager section v
 
@@ -147,10 +153,7 @@ class MainWindow:
         rsp = impDecKeyDialog.exec_()
         if rsp == QDialog.Accepted: #if user clicks ok. USE: Accepted() not accepted()!
             # secretkey = self.ui.imputDecryptionkeyLineEdit.text()
-            secretkey1 = str(ui.imputDecryptionkeyLineEdit.text()) #This works () needed after .text() to work
-
-
-        
+            secretkey1 = str(ui.imputDecryptionkeyLineEdit.text()) #This works "()"" is needed after .text() to work & do not use self.ui when calling Qdialog winodw ui elements
 
     def loadPasswords(self):
         # data to put into the table
