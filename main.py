@@ -64,11 +64,11 @@ class MainWindow:
         if self.ui.specialcharactersCheckBox.isChecked():
             defL += specialsL
         return(defL)
-
+    # updates slider length if a checkbox is toggled
     def checkboxes_toggled(self):
         lenght = self.checkboxesSliderLenght()
         self.ui.passwordlenghtSlider.setRange(0, lenght)
-
+    # updates password length is slider is moved
     def slider_moved(self):
         new_value = str(self.ui.passwordlenghtSlider.value())
         self.ui.lenghtCounterLabel.setText(new_value)
@@ -113,21 +113,22 @@ class MainWindow:
 
     # save file dialog
     def lunchSaveDialog(self):
-        saveDialog = QDialog()
-        ui = Ui_saveDialog()
-        ui.setupUi(saveDialog)
-        saveDialog.show()
-        # saveDialog.exec_()
-        rsp = saveDialog.exec_()
-        if rsp == QDialog.Accepted: #if user clicks ok. USE: "Accepted()" not "accepted()" capital A
-            sitet = str(ui.SiteLineEdit.text())
-            usernamet = str(ui.usernameLineEdit.text())
-            decryptionkeyt = str(ui.decryptionkeyLineEdit.text())
-            passwd = self.ui.GeneratedPasswordEdit.toPlainText()
-            with open("passwords.txt", "a") as f:     # might need to transform this section into a seprate fuction in the future!
-                f.write(sitet + "|" + usernamet +"|"+passwd+"|"+decryptionkeyt+ "\n")
-        else:
-            self.ui.GeneratedPasswordEdit.setText("password NOT saved!")
+        cond = self.ui.GeneratedPasswordEdit.toPlainText()
+        if cond != "":
+            saveDialog = QDialog()
+            ui = Ui_saveDialog()
+            ui.setupUi(saveDialog)
+            saveDialog.show()
+            # saveDialog.exec_()
+            rsp = saveDialog.exec_()
+            if rsp == QDialog.Accepted: #if user clicks ok btn | USE: "Accepted" not "accepted" capital A
+                sitet = str(ui.SiteLineEdit.text())
+                usernamet = str(ui.usernameLineEdit.text())
+                decryptionkeyt = str(ui.decryptionkeyLineEdit.text())
+                passwd = self.ui.GeneratedPasswordEdit.toPlainText()
+                with open("passwords.txt", "a") as f:     # might need to transform this section into a seprate fuction in the future
+                    f.write(sitet + "|" + usernamet +"|"+passwd+"|"+decryptionkeyt+ "\n")
+
 
 
 
