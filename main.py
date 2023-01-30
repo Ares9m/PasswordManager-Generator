@@ -11,21 +11,23 @@ class MainWindow:
         self.main_win = QMainWindow()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.main_win)
+        # ui setup and connections
         # self.setWindowTitle('Password Help')
-        # wyswitla startowa strone to jest wysztko co potrzebne zeby dodac .ui
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_1)
         # mainbtns
         self.ui.toGeneratorBtn.clicked.connect(self.togenerator)
         self.ui.toSavedPassBtn.clicked.connect(self.tosavedpasswords)
         # v Generator Section! v
+        self.ui.floorCheckBox.setVisible(False) #sets optional floor checkbox to invisble
         # password generator btn!
         self.ui.passwordGenerateBtn.clicked.connect(self.generatepassword)
         # slider connect
-        self.ui.passwordlenghtSlider.valueChanged.connect(self.slider_moved) #length not lenght -> need to fix that later
-        # updates the slider lenght
+        self.ui.passwordlengthSlider.valueChanged.connect(self.slider_moved) #length not lenght -> need to fix that later
+        # updates the slider length
         self.ui.capitalCheckBox.stateChanged.connect(self.checkboxes_toggled)
         self.ui.lowercaseCheckBox.stateChanged.connect(self.checkboxes_toggled)
         self.ui.separatorsCheckBox.stateChanged.connect(self.checkboxes_toggled)
+        self.ui.separatorsCheckBox.stateChanged.connect(self.separators_toggled)
         self.ui.digtsCheckBox.stateChanged.connect(self.checkboxes_toggled)
         self.ui.specialcharactersCheckBox.stateChanged.connect(self.checkboxes_toggled)
         # copybtn and savefpasswordbtn connect
@@ -36,7 +38,6 @@ class MainWindow:
         self.loadPasswords()
         # secret key imput btn connect
         self.ui.imputDecryptionKeyButton.clicked.connect(self.lunchImputDecryptionKeyDialog)
-        secretkey1 = ''
         
     # page switch functions
     def togenerator(self):
@@ -45,7 +46,7 @@ class MainWindow:
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_2)
     # v Generator section! v
     # slider functions
-    def checkboxesSliderLenght(self):
+    def checkboxesSliderLength(self):
         lettersL = 24
         digitsL = 10
         specialsL = 22
@@ -64,11 +65,18 @@ class MainWindow:
         return(defL)
     # updates slider length if a checkbox is toggled
     def checkboxes_toggled(self):
-        lenght = self.checkboxesSliderLenght()
-        self.ui.passwordlenghtSlider.setRange(0, lenght)
+        length = self.checkboxesSliderLength()
+        self.ui.passwordlengthSlider.setRange(0, length)
+
+    def separators_toggled(self):
+        if self.ui.separatorsCheckBox.isChecked():
+            self.ui.floorCheckBox.setVisible(True)
+        else:
+            self.ui.floorCheckBox.setVisible(False)
+
     # updates password length is slider is moved
     def slider_moved(self):
-        new_value = str(self.ui.passwordlenghtSlider.value())
+        new_value = str(self.ui.passwordlengthSlider.value())
         self.ui.lenghtCounterLabel.setText(new_value)
         
     # checkboxes functions
@@ -97,7 +105,7 @@ class MainWindow:
 
     # Generator logic
     def generatepassword(self):
-        length = self.ui.passwordlenghtSlider.value()
+        length = self.ui.passwordlengthSlider.value()
         characters = self.chekboxesGeneratorRundown()
         password = ''.join(random.sample(characters, length)) #sample will only use each symbol once
         self.ui.GeneratedPasswordEdit.setText(password)
@@ -109,7 +117,7 @@ class MainWindow:
         cb.clear(mode=cb.Clipboard) #clears existing clipboard 
         cb.setText(letxt, mode=cb.Clipboard) #assigns textedit text to clipboard 
 
-    # save file dialog, saving the password to .txt + encrypting it
+    # save file dialog, saving the password to .txt + encrypting it in the future
     def lunchSaveDialog(self):
         cond = self.ui.GeneratedPasswordEdit.toPlainText()
         if cond != "":
@@ -124,7 +132,7 @@ class MainWindow:
                 usernamet = str(ui.usernameLineEdit.text())
                 decryptionkeyt = str(ui.decryptionkeyLineEdit.text())
                 passwd = self.ui.GeneratedPasswordEdit.toPlainText()
-                with open("passwords.txt", "a") as f:     # might need to transform this section into a seprate fuction in the future
+                with open("passwords.txt", "a") as f:     # might need to transform this section into a fuction in the future
                     f.write(sitet+ "|" +usernamet+ "|" +passwd+"\n")
                 self.loadPasswords() #updates the table
 
@@ -177,7 +185,7 @@ if __name__ == "__main__":
     sys.exit(app.exec_())
 
 
-    # Test functions section
+    # notes section
 
     # def saveThePassword(self,site, user, key):
     #     # with open("test.txt", "w") as f: #its better to use it like this because it will close the file if done like f = open("test.txt", "w") another function file.close() is needed after otherwise it will still be using it
