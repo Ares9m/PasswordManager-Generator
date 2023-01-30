@@ -22,7 +22,7 @@ class MainWindow:
         # password generator btn!
         self.ui.passwordGenerateBtn.clicked.connect(self.generatepassword)
         # slider connect
-        self.ui.passwordlengthSlider.valueChanged.connect(self.slider_moved) #length not lenght -> need to fix that later
+        self.ui.passwordlenghtSlider.valueChanged.connect(self.slider_moved) #length not lenght -> need to fix that later in Qt_designer and code
         # updates the slider length
         self.ui.capitalCheckBox.stateChanged.connect(self.checkboxes_toggled)
         self.ui.lowercaseCheckBox.stateChanged.connect(self.checkboxes_toggled)
@@ -66,7 +66,7 @@ class MainWindow:
     # updates slider length if a checkbox is toggled
     def checkboxes_toggled(self):
         length = self.checkboxesSliderLength()
-        self.ui.passwordlengthSlider.setRange(0, length)
+        self.ui.passwordlenghtSlider.setRange(0, length)
 
     def separators_toggled(self):
         if self.ui.separatorsCheckBox.isChecked():
@@ -76,7 +76,7 @@ class MainWindow:
 
     # updates password length is slider is moved
     def slider_moved(self):
-        new_value = str(self.ui.passwordlengthSlider.value())
+        new_value = str(self.ui.passwordlenghtSlider.value())
         self.ui.lenghtCounterLabel.setText(new_value)
         
     # checkboxes functions
@@ -105,7 +105,7 @@ class MainWindow:
 
     # Generator logic
     def generatepassword(self):
-        length = self.ui.passwordlengthSlider.value()
+        length = self.ui.passwordlenghtSlider.value()
         characters = self.chekboxesGeneratorRundown()
         password = ''.join(random.sample(characters, length)) #sample will only use each symbol once
         self.ui.GeneratedPasswordEdit.setText(password)
