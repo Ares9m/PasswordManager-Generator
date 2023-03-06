@@ -12,17 +12,18 @@ class MainWindow:
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.main_win)
         # ui setup and connections
-        # self.setWindowTitle('Password Help')
+        # self.setWindowTitle("apptitle")
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_1)
         # mainbtns
         self.ui.toGeneratorBtn.clicked.connect(self.togenerator)
         self.ui.toSavedPassBtn.clicked.connect(self.tosavedpasswords)
-        # v Generator Section! v
+        # === Generator Section ===
         self.ui.floorCheckBox.setVisible(False) #sets optional floor checkbox to invisble
-        # password generator btn!
+        # password generator btn
         self.ui.passwordGenerateBtn.clicked.connect(self.generatepassword)
         # slider connect
-        self.ui.passwordlenghtSlider.valueChanged.connect(self.slider_moved) #length not lenght -> need to fix that later in Qt_designer and code
+        self.ui.passwordlenghtSlider.valueChanged.connect(self.slider_moved) 
+        #length not lenght, need to fix that later
         # updates the slider length
         self.ui.capitalCheckBox.stateChanged.connect(self.checkboxes_toggled)
         self.ui.lowercaseCheckBox.stateChanged.connect(self.checkboxes_toggled)
@@ -33,7 +34,7 @@ class MainWindow:
         # copybtn and savefpasswordbtn connect
         self.ui.copyPassBtn.clicked.connect(self.copyToClipboard)
         self.ui.savePassBtn.clicked.connect(self.lunchSaveDialog)
-        # v Menager section! v
+        # === Menager section ===
         # Tableinit
         self.loadPasswords()
         # secret key imput btn connect
@@ -44,7 +45,7 @@ class MainWindow:
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_1)    
     def tosavedpasswords(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_2)
-    # v Generator section! v
+    # === Generator section ===
     # slider functions
     def checkboxesSliderLength(self):
         lettersL = 24
@@ -67,7 +68,7 @@ class MainWindow:
     def checkboxes_toggled(self):
         length = self.checkboxesSliderLength()
         self.ui.passwordlenghtSlider.setRange(0, length)
-
+    # shows the use "_" if sepcheckbox is toggled
     def separators_toggled(self):
         if self.ui.separatorsCheckBox.isChecked():
             self.ui.floorCheckBox.setVisible(True)
@@ -112,12 +113,16 @@ class MainWindow:
 
     # copy to clipboard function
     def copyToClipboard(self):
-        letxt = self.ui.GeneratedPasswordEdit.toPlainText() # Textedit and lineedit are different and Textedit doest not have .text() and you need too use toPlainText() method
+        letxt = self.ui.GeneratedPasswordEdit.toPlainText() 
+        # Textedit and lineedit are different and Textedit doest not use .text()
+        # it uses toPlainText() method instead
         cb = QApplication.clipboard()
-        cb.clear(mode=cb.Clipboard) #clears existing clipboard 
-        cb.setText(letxt, mode=cb.Clipboard) #assigns textedit text to clipboard 
+        cb.clear(mode=cb.Clipboard) 
+        #clears existing clipboard 
+        cb.setText(letxt, mode=cb.Clipboard) 
+        #assigns textedit text to clipboard 
 
-    # save file dialog, saving the password to .txt + encrypting it in the future
+    # save file dialog, saving the password to .txt
     def lunchSaveDialog(self):
         cond = self.ui.GeneratedPasswordEdit.toPlainText()
         if cond != "":
@@ -127,7 +132,8 @@ class MainWindow:
             saveDialog.show()
             # saveDialog.exec_()
             rsp = saveDialog.exec_()
-            if rsp == QDialog.Accepted: #if user clicks ok btn | USE: "Accepted" not "accepted" capital A
+            if rsp == QDialog.Accepted: 
+                #if user clicks ok btn | USE: "Accepted" not "accepted" capital A
                 sitet = str(ui.SiteLineEdit.text())
                 usernamet = str(ui.usernameLineEdit.text())
                 decryptionkeyt = str(ui.decryptionkeyLineEdit.text())
@@ -137,8 +143,7 @@ class MainWindow:
                 self.loadPasswords() #updates the table
 
 
-    # v Menager section v
-
+    # === Menager section ===
     def lunchImputDecryptionKeyDialog(self):
         impDecKeyDialog = QDialog()
         ui = Ui_impDecKeyDialog()
@@ -146,9 +151,11 @@ class MainWindow:
         impDecKeyDialog.show()
         # impDecKeyDialog.exec_() #without exec_() the dialog will clsoe immediately
         rsp = impDecKeyDialog.exec_()
-        if rsp == QDialog.Accepted: #if user clicks ok. USE: Accepted() not accepted()!
+        if rsp == QDialog.Accepted: 
+            #if user clicks ok. USE: Accepted() not accepted()
             # secretkey = self.ui.imputDecryptionkeyLineEdit.text()
-            secretkey1 = str(ui.imputDecryptionkeyLineEdit.text()) #This works "()"" is needed after .text() to work & do not use self.ui when calling Qdialog winodw ui elements
+            secretkey1 = str(ui.imputDecryptionkeyLineEdit.text()) 
+            #"()" is needed after .text() to work & do not use self.ui when calling Qdialog winodow ui elements
 
     def loadPasswords(self):
         # data to put into the table        
@@ -173,8 +180,7 @@ class MainWindow:
             row_index += 1
 
 
-    # v Main program section v
-    # kinda important, mainwindow wont display without this function!
+    # === Main program section ===
     def show(self):
         self.main_win.show()
 
@@ -184,14 +190,15 @@ if __name__ == "__main__":
     main_win.show()
     sys.exit(app.exec_())
 
+"""
+    === notes ===
 
-    # notes section
-
-    # def saveThePassword(self,site, user, key):
-    #     # with open("test.txt", "w") as f: #its better to use it like this because it will close the file if done like f = open("test.txt", "w") another function file.close() is needed after otherwise it will still be using it
-    #     #     # modes "r" = read the file "w" overwrite the file -> if already exists it will clear and save the contents then "a" append mode if there is no file it will create it like w but it will not clear the conttes just add new content at the end
-    #     #     mytext = self.ui.GeneratedPasswordEdit.toPlainText()
-    #     #     f.write(mytext)
-    #     with open("passwords.txt", "a"):
-    #         passwd = self.ui.GeneratedPasswordEdit.toPlainText()
-    #         f.write(site + "|" + user +"|"+passwd+"|"+key+ "\n")
+    def saveThePassword(self,site, user, key):
+        # with open("test.txt", "w") as f: #its better to use it like this because it will close the file if done like f = open("test.txt", "w") another function file.close() is needed after otherwise it will still be using it
+        #     # modes "r" = read the file "w" overwrite the file -> if already exists it will clear and save the contents then "a" append mode if there is no file it will create it like w but it will not clear the conttes just add new content at the end
+        #     mytext = self.ui.GeneratedPasswordEdit.toPlainText()
+        #     f.write(mytext)
+        with open("passwords.txt", "a"):
+            passwd = self.ui.GeneratedPasswordEdit.toPlainText()
+            f.write(site + "|" + user +"|"+passwd+"|"+key+ "\n")
+"""
