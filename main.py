@@ -18,7 +18,8 @@ class MainWindow:
         self.ui.toGeneratorBtn.clicked.connect(self.togenerator)
         self.ui.toSavedPassBtn.clicked.connect(self.tosavedpasswords)
         # === Generator Section ===
-        self.ui.floorCheckBox.setVisible(False) #sets optional floor checkbox to invisble
+        #sets optional floor checkbox to invisble
+        self.ui.floorCheckBox.setVisible(False) 
         # password generator btn
         self.ui.passwordGenerateBtn.clicked.connect(self.generatepassword)
         # slider connect
@@ -108,7 +109,8 @@ class MainWindow:
     def generatepassword(self):
         length = self.ui.passwordlenghtSlider.value()
         characters = self.chekboxesGeneratorRundown()
-        password = ''.join(random.sample(characters, length)) #sample will only use each symbol once
+        password = ''.join(random.sample(characters, length)) 
+        #sample will only use each symbol once
         self.ui.GeneratedPasswordEdit.setText(password)
 
     # copy to clipboard function
@@ -133,14 +135,16 @@ class MainWindow:
             # saveDialog.exec_()
             rsp = saveDialog.exec_()
             if rsp == QDialog.Accepted: 
-                #if user clicks ok btn | USE: "Accepted" not "accepted" capital A
+                #if user clicks ok. USE: Accepted() not: accepted()
                 sitet = str(ui.SiteLineEdit.text())
                 usernamet = str(ui.usernameLineEdit.text())
                 decryptionkeyt = str(ui.decryptionkeyLineEdit.text())
                 passwd = self.ui.GeneratedPasswordEdit.toPlainText()
-                with open("passwords.txt", "a") as f:     # might need to transform this section into a fuction in the future
+                # transform this section into a fuction in the future
+                with open("passwords.txt", "a") as f:     
                     f.write(sitet+ "|" +usernamet+ "|" +passwd+"\n")
-                self.loadPasswords() #updates the table
+                self.loadPasswords() 
+                #updates the table
 
 
     # === Menager section ===
@@ -152,10 +156,11 @@ class MainWindow:
         # impDecKeyDialog.exec_() #without exec_() the dialog will clsoe immediately
         rsp = impDecKeyDialog.exec_()
         if rsp == QDialog.Accepted: 
-            #if user clicks ok. USE: Accepted() not accepted()
+            #if user clicks ok. USE: Accepted() not: accepted()
             # secretkey = self.ui.imputDecryptionkeyLineEdit.text()
             secretkey1 = str(ui.imputDecryptionkeyLineEdit.text()) 
-            #"()" is needed after .text() to work & do not use self.ui when calling Qdialog winodow ui elements
+            #"()" is needed after .text() to work 
+            # do not use self.ui when calling Qdialog winodow ui elements
 
     def loadPasswords(self):
         # data to put into the table        
@@ -176,7 +181,8 @@ class MainWindow:
             as_list = passw.split("|")
             self.ui.tableWidget.setItem(row_index, 0, QTableWidgetItem(str(as_list[0])))
             self.ui.tableWidget.setItem(row_index, 1, QTableWidgetItem(str(as_list[1])))
-            self.ui.tableWidget.setItem(row_index, 2, QTableWidgetItem(str(as_list[2].strip()))) #strip gets rid of \n at the end
+            self.ui.tableWidget.setItem(row_index, 2, QTableWidgetItem(str(as_list[2].strip()))) 
+            #strip gets rid of \n at the end
             row_index += 1
 
 
